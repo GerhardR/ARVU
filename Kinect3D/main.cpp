@@ -7,9 +7,6 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
-
-#include <MSR_NuiApi.h>
-
 #include <glwindow.h>
 
 using namespace std;

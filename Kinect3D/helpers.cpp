@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 #include <gl/GL.h>
-#include <MSR_NuiApi.h>
+#include <NuiApi.h>
 
 void render_points_colored( const std::vector<Point> & points ){
 	glEnableClientState(GL_VERTEX_ARRAY);

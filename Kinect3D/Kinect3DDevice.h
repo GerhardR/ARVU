@@ -2,7 +2,7 @@
 #define KINECT3DDEVICE_H
 
 #include <Windows.h>
-#include <MSR_NuiApi.h>
+#include <NuiApi.h>
 
 #include "helpers.h"
 
