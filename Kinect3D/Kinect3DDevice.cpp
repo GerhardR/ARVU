@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Kinect3DDevice::Kinect3DDevice(bool skeleton) : use_skeleton(skeleton) {
+Kinect3DDevice::Kinect3DDevice(bool skeleton) : use_skeleton(skeleton), m_hThNuiProcess(INVALID_HANDLE_VALUE), m_hEvNuiProcessStop(INVALID_HANDLE_VALUE) {
     HRESULT hr;
 
     m_hNextDepthFrameEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
@@ -44,13 +44,13 @@ Kinect3DDevice::Kinect3DDevice(bool skeleton) : use_skeleton(skeleton) {
 
 Kinect3DDevice::~Kinect3DDevice(){
    // Stop the Nui processing thread
-    if(m_hEvNuiProcessStop!=NULL)
+    if(m_hEvNuiProcessStop!=INVALID_HANDLE_VALUE)
     {
         // Signal the thread
         SetEvent(m_hEvNuiProcessStop);
 
         // Wait for thread to stop
-        if(m_hThNuiProcess!=NULL)
+        if(m_hThNuiProcess!=INVALID_HANDLE_VALUE)
         {
             WaitForSingleObject(m_hThNuiProcess,INFINITE);
             CloseHandle(m_hThNuiProcess);
