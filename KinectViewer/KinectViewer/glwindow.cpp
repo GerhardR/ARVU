@@ -466,8 +466,8 @@ void GLWindow::get_events(EventSummary& summary)
     summary.cursor = cursor_position();
     MakeSummary ms(summary);
     handle_events(ms);
-	summary.window_size = size();
-	summary.window_position = position();
+    summary.window_size = size();
+    summary.window_position = position();
 }
 
 bool GLWindow::has_events() const
