@@ -6,7 +6,26 @@
 
 #include "helpers.h"
 
-class Kinect3DDevice {
+class DepthDevice {
+public:
+    virtual void getVideoSize( int & width, int & height ) const = 0;
+    virtual void getDepthSize( int & width, int & height ) const = 0;
+    virtual bool isUsingSkeleton() const = 0;
+
+    virtual bool haveVideoBuffer() const = 0;
+    virtual bool haveDepthBuffer() const = 0;
+
+    virtual uint32_t * getVideoBuffer() = 0;
+    virtual uint16_t * getDepthBuffer() = 0;
+    virtual uint8_t * getDepthTexture() = 0;
+    virtual void getTrackedSkeletons(std::vector<int> & valid_skeletons) = 0;
+    virtual const Vector4 * getSkeleton(const int number) const = 0;
+
+    virtual void make3DPoints( std::vector<Point> & points ) const = 0;
+    virtual void make3DSkeletonPoints( std::vector<Point> & background, std::vector<Point> & player1, std::vector<Point> & player2) const = 0;
+};
+
+class Kinect3DDevice : public DepthDevice {
 public:
     Kinect3DDevice(bool skeleton = false);
     virtual ~Kinect3DDevice();
@@ -86,6 +105,75 @@ protected:
     std::vector<uint16_t> depth;
     std::vector<uint8_t> depth_texture;
     bool rgb_valid, depth_valid;
+};
+
+class FakeDevice : public DepthDevice {
+public:
+    FakeDevice() {
+        int w, h;
+
+        getVideoSize(w,h);
+        rgb.resize(w*h);
+        
+        for(int y = 0; y < h; ++y)
+            for(int x = 0; x < w; ++x){
+                rgb[y*w+x] = RGB(x,y,x+y);
+            }
+
+        getDepthSize(w,h);
+        depth_texture.resize(w*h);
+        for(int y = 0; y < h; ++y)
+            for(int x = 0; x < w; ++x){
+                depth_texture[y*w+x] = 128;
+            }
+    }
+
+    void getVideoSize( int & width, int & height ) const {
+        width = 640;
+        height = 480;
+    }
+    
+    void getDepthSize( int & width, int & height ) const  {
+        width = 640;
+        height = 480;
+    }
+
+    bool isUsingSkeleton() const { return false; }
+
+    bool haveVideoBuffer() const { return true; }
+    bool haveDepthBuffer() const { return true; }
+
+    uint32_t * getVideoBuffer() { return rgb.data(); }
+    uint16_t * getDepthBuffer() { return NULL; }
+    uint8_t * getDepthTexture() { return depth_texture.data(); }
+    void getTrackedSkeletons(std::vector<int> & valid_skeletons) { valid_skeletons.clear(); };
+    const Vector4 * getSkeleton(const int number) const { return NULL; };
+
+    void make3DPoints( std::vector<Point> & points ) const {
+        int w, h;
+        getVideoSize(w, h);
+
+        if(points.size() < unsigned(w*h)){
+            points.clear();
+            const float f = 0.003f;
+            for(int y = 0; y < h; ++y)
+                for(int x = 0; x < w; ++x){
+                    float xx = (x-w/2)*f;
+                    float yy = (y-h/2)*f;
+                    float z = 4 - 2*sqrt(xx*xx + yy*yy);
+                    points.push_back(Point(xx*z, yy*z, z, rgb[y*w+x])); 
+                }
+        }
+    }
+
+    void make3DSkeletonPoints( std::vector<Point> & background, std::vector<Point> & player1, std::vector<Point> & player2) const {
+        player1.clear();
+        player2.clear();
+    }
+
+protected:
+    std::vector<uint32_t> rgb;
+    std::vector<uint8_t> depth_texture;
 };
 
 #endif // KINECT3DDEVICE_H

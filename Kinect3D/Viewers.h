@@ -4,12 +4,12 @@
 class Viewer {
 public:
 	virtual void handle_events( const GLWindow::EventSummary & events) {}
-	virtual void render( MyKinect & kinect ) {}
+	virtual void render( DepthDevice & kinect ) {}
 };
 
 class ImageViewer : public Viewer {
 public:
-	void render( MyKinect & kinect ){
+	void render( DepthDevice & kinect ){
 		glDisable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
@@ -39,7 +39,7 @@ public:
 
 class ARViewer : public Viewer {
 public:
-	void render( MyKinect & kinect ){
+	void render( DepthDevice & kinect ){
 		glEnable(GL_BLEND);
 		glEnable(GL_POINT_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
@@ -87,7 +87,7 @@ public:
 		}
 	}
 
-	void render( MyKinect & kinect ){
+	void render( DepthDevice & kinect ){
 		glEnable(GL_BLEND);
 		glEnable(GL_POINT_SMOOTH);
 		glEnable(GL_DEPTH_TEST);

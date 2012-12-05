@@ -6,7 +6,7 @@
 class Scene {
 public:
 	virtual void handle_events( const GLWindow::EventSummary & events) {}
-	virtual void render( MyKinect & kinect ) {}
+	virtual void render( DepthDevice & kinect ) {}
 };
 
 class KinectScene : public Scene {
@@ -29,7 +29,7 @@ public:
 			point_size = 5;
 	}
 
-	void render( MyKinect & kinect ){
+	void render( DepthDevice & kinect ){
 		// get 3D points
 		kinect.make3DPoints(points);
 		// render 3D points
@@ -80,7 +80,7 @@ public:
 		}
 	}
 
-	void render( MyKinect & kinect ){
+	void render( DepthDevice & kinect ){
 		// render the background first
 		KinectScene::render(kinect);
 

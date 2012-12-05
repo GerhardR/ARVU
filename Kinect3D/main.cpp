@@ -36,6 +36,7 @@ int main(int argc, char ** argv){
 
 	// setup kinect;
 	MyKinect kinect(true);
+	//FakeDevice kinect;		// use this instead of MyKinect class for testing without a kinect
 
 	// run event loop and re-render if new buffers are received
 	while(!events.should_quit()){
