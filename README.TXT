@@ -1,4 +1,4 @@
-ARVU 2011/12 Kinect SDK 1.0
+ARVU 2012 Kinect SDK 1.1
 ===========================
 
 This is a short README for the ARVU Kinect SDK. 
